@@ -97,6 +97,9 @@ const update = async function (req, res) {
         let data = req.body
         let blogId = req.params.blogId
 
+        if(Object.keys(data).length==0)
+        return res.status(404).send({ msg: "No data for Update ⚠️" })
+
         if(!mongoose.isValidObjectId(blogId))
         return res.status(400).send({ Status: false, message: "Please enter valid blogId ⚠️" })
 
