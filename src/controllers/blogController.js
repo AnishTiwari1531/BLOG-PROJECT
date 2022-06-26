@@ -76,7 +76,7 @@ const getBlogs = async function (req, res) {
         }
 
         if (arr.length > 0) {
-            res.status(200).send({ status: true, data: arr });
+            res.status(200).send({ status: true, data: arr, count : arr.length });
         } else {
             res.status(404).send({ status: false, message: "No such blog is found ⚠️" });
         }
@@ -157,7 +157,7 @@ const deleteByBlogId = async function (req, res) {
 
         if (data) {
             if (data.isDeleted == false) {
-                await blogModel.findOneAndUpdate({ _id: id }, { isDeleted: true, deletedAt: new Date.now() }, { new: true })
+                await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date.now() }, { new: true })
                 res.status(200).send({ status: true, msg: "data deleted ⚠️" })
             } else {
                 res.status(200).send({ status: false, msg: "data already deleted ⚠️" })
@@ -205,7 +205,7 @@ const deleteByQuery = async function (req, res) {
         let data = await blogModel.findOne(filterdata)
 
         if (!data)
-            return res.status(404).send({ status: false, msg: "No Record Found ⚠️" })
+            return res.status(404).send({ status: false, msg: "No Record Found or invalid Id ⚠️" })
 
         if (data.authorId._id.toString() !== req.authorId)
             return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
