@@ -68,7 +68,7 @@ module.exports.createAuthor = async function (req, res) {
         }
 
         let savedData = await authorModel.create(data)
-        return res.status(201).send({ msg: savedData })
+        return res.status(201).send({ status : true, msg: savedData })
 
     }
     catch (error) {
