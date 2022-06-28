@@ -11,29 +11,29 @@ const blogModel = require("../models/blogModel")
 
 const createBlog = async function (req, res) {
     try {
-        let data=req.body
+        let data = req.body
         if (Object.keys(data).length === 0)
-        return res.status(400).send({ Status: false, message: "Please provide all the required data ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please provide all the required data ⚠️" })
 
-        if(!data.title || data.title == "")
-        return res.status(400).send({ Status: false, message: "Please provide title of the blog ⚠️" })
+        if (!data.title || data.title == "")
+            return res.status(400).send({ Status: false, message: "Please provide title of the blog ⚠️" })
         else
-        data.title = data.title.trim()
+            data.title = data.title.trim()
 
-        if(!data.body || data.body == "")
-        return res.status(400).send({ Status: false, message: "Please provide body of the blog ⚠️" })
+        if (!data.body || data.body == "")
+            return res.status(400).send({ Status: false, message: "Please provide body of the blog ⚠️" })
         else
-        data.body = data.body.trim()
+            data.body = data.body.trim()
 
-        if(!data.authorId || data.authorId == "")
-        return res.status(400).send({ Status: false, message: "Please provide authorId ⚠️" })
+        if (!data.authorId || data.authorId == "")
+            return res.status(400).send({ Status: false, message: "Please provide authorId ⚠️" })
         else
-        data.authorId = data.authorId.trim()
+            data.authorId = data.authorId.trim()
 
-        if(!data.category || data.category == "")
-        return res.status(400).send({ Status: false, message: "Please provide blog category ⚠️" })
+        if (!data.category || data.category == "")
+            return res.status(400).send({ Status: false, message: "Please provide blog category ⚠️" })
         else
-        data.category = data.category.trim()
+            data.category = data.category.trim()
 
         if (data.authorId !== req.authorId)
             return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
@@ -42,7 +42,7 @@ const createBlog = async function (req, res) {
             data.publishedAt = Date.now()
 
         let savedData = await blogModel.create(data)
-        res.status(201).send({ msg: savedData })
+        res.status(201).send({ status: true, msg: savedData })
 
     }
     catch (error) {
@@ -60,9 +60,9 @@ const createBlog = async function (req, res) {
 
 const getBlogs = async function (req, res) {
     try {
-        if(req.query.authorId){
-        if(!mongoose.isValidObjectId(req.query.authorId))
-        return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
+        if (req.query.authorId) {
+            if (!mongoose.isValidObjectId(req.query.authorId))
+                return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
         }
 
         let blogFound = await blogModel.find(req.query);
@@ -76,7 +76,7 @@ const getBlogs = async function (req, res) {
         }
 
         if (arr.length > 0) {
-            res.status(200).send({ status: true, data: arr, count : arr.length });
+            res.status(200).send({ status: true, data: arr, count: arr.length });
         } else {
             res.status(404).send({ status: false, message: "No such blog is found ⚠️" });
         }
@@ -97,8 +97,8 @@ const update = async function (req, res) {
         let data = req.body
         let blogId = req.params.blogId
 
-        if(!mongoose.isValidObjectId(blogId))
-        return res.status(400).send({ Status: false, message: "Please enter valid blogId ⚠️" })
+        if (!mongoose.isValidObjectId(blogId))
+            return res.status(400).send({ Status: false, message: "Please enter valid blogId ⚠️" })
 
         let findblog = await blogModel.findById(blogId)
         if (!findblog)
@@ -124,7 +124,7 @@ const update = async function (req, res) {
                     subcategory: data.subcategory
                 }
             }, { new: true, upsert: true })
-            return res.status(200).send(updatedBlog)
+            return res.status(200).send({ status: true, msg: updatedBlog })
         }
 
     }
@@ -145,8 +145,8 @@ const deleteByBlogId = async function (req, res) {
     try {
         let blogId = req.params.blogId
 
-        if(!mongoose.isValidObjectId(blogId))
-        return res.status(400).send({ Status: false, message: "Please enter valid blogId ⚠️" })
+        if (!mongoose.isValidObjectId(blogId))
+            return res.status(400).send({ Status: false, message: "Please enter valid blogId ⚠️" })
 
         let data = await blogModel.findById(blogId)
         if (!data)
@@ -184,10 +184,10 @@ const deleteByQuery = async function (req, res) {
         let { category, subcategory, tags, authorId } = req.query
 
         if (authorId) {
-        if(!mongoose.isValidObjectId(req.query.authorId))
-        return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
-        else
-        filterdata.authorId = authorId
+            if (!mongoose.isValidObjectId(req.query.authorId))
+                return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
+            else
+                filterdata.authorId = authorId
         }
 
         if (category) {
@@ -197,7 +197,7 @@ const deleteByQuery = async function (req, res) {
         if (subcategory) {
             filterdata.subcategory = subcategory
         }
-        
+
         if (tags) {
             filterdata.tags = tags
         }
