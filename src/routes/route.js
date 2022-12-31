@@ -17,7 +17,8 @@ router.post("/login", authorController.login)
 
 router.post("/blogs",commonMiddleware.tokenChecker, blogController.createBlog)
 
-router.get("/blogs", commonMiddleware.tokenChecker, blogController.getBlogs)
+// router.get("/blogs", commonMiddleware.tokenChecker, blogController.getBlogs)
+router.get("/blogs",  blogController.getBlogs)
 
 router.put("/blogs/:blogId", commonMiddleware.tokenChecker, blogController.update)
 
